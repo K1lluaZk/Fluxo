@@ -6,7 +6,9 @@
 *.swp
 .buildlog/
 .history
-
+.node_modules/
+.package-lock.json
+.package.json
 
 
 # Flutter repo-specific
