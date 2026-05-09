@@ -1,66 +1,66 @@
 import socket
 import os
+import threading
+import time
 
-# Configuración inicial
-IP_SERVIDOR = "0.0.0.0"  
-PUERTO = 5005
-BUFFER_SIZE = 4096  
+IP_SERVIDOR = "192.168.100.4"
+IP_CELULAR = "192.168.100.12"
+PUERTO_RECIBIR = 5005
+PUERTO_ENVIAR = 5006
+BUFFER_SIZE = 4096
 SEPARATOR = "<SEPARATOR>"
 
-def iniciar_servidor():
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Carpeta que Python vigilará
+FOLDER_VINCULADA = os.path.join(os.path.expanduser("~"), "Downloads")
+os.makedirs(FOLDER_VINCULADA, exist_ok=True)
 
-    try:
-        server_socket.bind((IP_SERVIDOR, PUERTO))
-        server_socket.listen(5)
-        print(f"[*] Fluxo Server iniciado en puerto {PUERTO}")
-        print("[*] Esperando conexión del celular...")
-    except Exception as e:
-        print(f"[!] Error al iniciar: {e}")
-        return
-
+def servidor_recibir():
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind((IP_SERVIDOR, PUERTO_RECIBIR))
+    server.listen(5)
     while True:
-        client_socket, address = server_socket.accept()
-        print(f"\n[+] Celular conectado desde: {address}")
-
+        client, _ = server.accept()
         try:
-            # Recibir metadatos
-            raw_data = client_socket.recv(BUFFER_SIZE).decode()
-            if not raw_data or SEPARATOR not in raw_data:
-                raise ValueError("Datos de protocolo inválidos")
+            raw = client.recv(BUFFER_SIZE).decode(errors="ignore")
+            if SEPARATOR in raw:
+                filename, filesize = raw.split(SEPARATOR)
+                client.sendall(b"READY")
+                with open(os.path.join(FOLDER_VINCULADA, filename), "wb") as f:
+                    recibido = 0
+                    while recibido < int(filesize):
+                        data = client.recv(BUFFER_SIZE)
+                        if not data: break
+                        f.write(data)
+                        recibido += len(data)
+                client.sendall(b"RECIBIDO")
+        except: pass
+        finally: client.close()
 
-            filename, filesize = raw_data.split(SEPARATOR)
-            filename = os.path.basename(filename)
-            filesize = int(filesize)
+def enviar_al_celular(path):
+    try:
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect((IP_CELULAR, PUERTO_ENVIAR))
+        name, size = os.path.basename(path), os.path.getsize(path)
+        client.sendall(f"{name}{SEPARATOR}{size}".encode())
+        if "READY" in client.recv(BUFFER_SIZE).decode():
+            with open(path, "rb") as f:
+                while data := f.read(BUFFER_SIZE): client.sendall(data)
+        client.close()
+    except: pass
 
-            print(f"{filename} ({filesize / 1024:.2f} KB)")
-
-            # Confirmación al dispositivo
-            client_socket.send("READY".encode())
-
-            with open(f"{filename}", "wb") as f:
-                bytes_recibidos = 0
-
-                while bytes_recibidos < filesize:
-                    bytes_to_read = min(BUFFER_SIZE, filesize - bytes_recibidos)
-                    bytes_read = client_socket.recv(bytes_to_read)
-
-                    if not bytes_read:
-                        break
-
-                    f.write(bytes_read)
-                    bytes_recibidos += len(bytes_read)
-
-                    progreso = (bytes_recibidos / filesize) * 100
-                    print(f"\r    Progreso: {progreso:.1f}% [{bytes_recibidos}/{filesize} bytes]", end="")
-
-            print(f"\n[V] ¡Archivo {filename} guardado con éxito!")
-
-        except Exception as e:
-            print(f"\n[!] Error durante la transferencia: {e}")
-
-        finally:
-            client_socket.close()
+def monitor_de_carpeta():
+    """ Revisa si pusiste algo nuevo en la carpeta de la PC para mandarlo al celular """
+    procesados = set(os.listdir(FOLDER_VINCULADA))
+    while True:
+        actuales = set(os.listdir(FOLDER_VINCULADA))
+        nuevos = actuales - procesados
+        for archivo in nuevos:
+            enviar_al_celular(os.path.join(FOLDER_VINCULADA, archivo))
+        procesados = actuales
+        time.sleep(2)
 
 if __name__ == "__main__":
-    iniciar_servidor()
+    threading.Thread(target=servidor_recibir, daemon=True).start()
+    print(f"[*] Fluxo vinculado. Carpeta: {FOLDER_VINCULADA}")
+    monitor_de_carpeta()
