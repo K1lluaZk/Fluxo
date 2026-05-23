@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   cupertino_icons: ^1.0.8
   file_picker: ^10.3.10
   path: ^1.9.1
