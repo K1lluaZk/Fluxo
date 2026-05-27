@@ -94,6 +94,24 @@ void showDetalleMovimiento(BuildContext context, Movimiento item) {
             ],
           ),
 
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Categoría",
+                style: TextStyle(fontSize: 18, color: Colors.white70),
+              ),
+              Text(
+                item.categoria,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+
           const SizedBox(height: 40),
         ],
       ),

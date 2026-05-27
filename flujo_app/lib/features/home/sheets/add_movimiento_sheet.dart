@@ -9,6 +9,19 @@ void showAddMovimientoSheet({
   final montoController = TextEditingController();
   bool esIngreso = true;
 
+  // Lista de categorías disponibles
+  final List<String> categorias = [
+    "Comida",
+    "Transporte",
+    "Compras",
+    "Trabajo",
+    "Entretenimiento",
+    "Salud",
+  ];
+
+  // Categoría seleccionada por defecto
+  String categoriaSeleccionada = "Comida";
+
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -42,7 +55,11 @@ void showAddMovimientoSheet({
                 const SizedBox(height: 20),
                 const Text(
                   "Nuevo Movimiento",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 25),
 
@@ -97,6 +114,38 @@ void showAddMovimientoSheet({
                     ),
                   ),
                 ),
+                const SizedBox(height: 15),
+
+                // Selector de Categoría (Dropdown)
+                DropdownButtonFormField<String>(
+                  value: categoriaSeleccionada,
+                  dropdownColor: const Color(0xFF1E293B), // Fondo del menú desplegable
+                  style: const TextStyle(color: Colors.white),
+                  icon: const Icon(Icons.arrow_drop_down, color: Colors.blueGrey),
+                  decoration: InputDecoration(
+                    labelText: "Categoría",
+                    labelStyle: const TextStyle(color: Colors.blueGrey),
+                    filled: true,
+                    fillColor: Colors.white.withOpacity(0.05),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  items: categorias.map((String cat) {
+                    return DropdownMenuItem<String>(
+                      value: cat,
+                      child: Text(cat),
+                    );
+                  }).toList(),
+                  onChanged: (nuevoValor) {
+                    if (nuevoValor != null) {
+                      setModalState(() {
+                        categoriaSeleccionada = nuevoValor;
+                      });
+                    }
+                  },
+                ),
                 const SizedBox(height: 30),
 
                 // Botón Guardar (Azul Marino Vibrante)
@@ -105,9 +154,11 @@ void showAddMovimientoSheet({
                   height: 55,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E40AF), // Azul del código anterior
+                      backgroundColor: const Color(0xFF1E40AF),
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       elevation: 5,
                     ),
                     onPressed: () {
@@ -122,6 +173,7 @@ void showAddMovimientoSheet({
                         monto: monto,
                         ingreso: esIngreso,
                         fecha: DateTime.now(),
+                        categoria: categoriaSeleccionada, // Asignación limpia del String seleccionado
                       );
 
                       onSave(movimiento);

@@ -4,6 +4,7 @@ class Movimiento {
   final double monto;
   final bool ingreso;
   final DateTime fecha;
+  final String categoria;
 
   Movimiento({
     required this.id,
@@ -11,6 +12,7 @@ class Movimiento {
     required this.monto,
     required this.ingreso,
     required this.fecha,
+    required this.categoria,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class Movimiento {
       'monto': monto,
       'ingreso': ingreso,
       'fecha': fecha.toIso8601String(),
+      'categoria': categoria,
     };
   }
 
@@ -30,6 +33,7 @@ class Movimiento {
       monto: map['monto'],
       ingreso: map['ingreso'],
       fecha: DateTime.parse(map['fecha']),
+      categoria: map['categoria'],
     );
   }
 }
