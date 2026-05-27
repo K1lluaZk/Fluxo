@@ -17,10 +17,12 @@ dependencies:
   path: ^1.9.1
   shared_preferences: ^2.5.2
   path_provider: ^2.1.5
+  provider: ^6.1.5+1
 
   dio: ^5.4.0
   udp: ^5.0.3
   uuid: ^4.3.3
+  fl_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:
