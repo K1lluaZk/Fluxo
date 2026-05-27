@@ -8,6 +8,7 @@ import '../sheets/add_movimiento_sheet.dart';
 import '../sheets/detalle_movimiento_sheet.dart';
 import '../providers/movimiento_provider.dart';
 import '../widgets/charts/balance_chart.dart';
+import '../widgets/app_drawer.dart';
 
 // --- VISTA (HOME SCREEN) ---
 class HomeScreen extends StatelessWidget {
@@ -20,6 +21,7 @@ class HomeScreen extends StatelessWidget {
     final movimientos = movimientoProvider.movimientos;
 
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text("Fluxo"),
       ),
