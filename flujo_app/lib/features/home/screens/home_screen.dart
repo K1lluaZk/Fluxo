@@ -21,11 +21,13 @@ class HomeScreen extends StatelessWidget {
     final movimientos = movimientoProvider.movimientos;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text("Fluxo"),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFF1E40AF),
         onPressed: () {
           showAddMovimientoSheet(
             context: context,
@@ -38,6 +40,8 @@ class HomeScreen extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: SingleChildScrollView(
+        keyboardDismissBehavior:
+            ScrollViewKeyboardDismissBehavior.onDrag,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
