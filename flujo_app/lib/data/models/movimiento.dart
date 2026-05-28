@@ -1,9 +1,26 @@
+import 'package:hive/hive.dart';
+
+part 'movimiento.g.dart';
+
+@HiveType(typeId: 0)
 class Movimiento {
+
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String titulo;
+
+  @HiveField(2)
   final double monto;
+
+  @HiveField(3)
   final bool ingreso;
+
+  @HiveField(4)
   final DateTime fecha;
+
+  @HiveField(5)
   final String categoria;
 
   Movimiento({
@@ -14,26 +31,4 @@ class Movimiento {
     required this.fecha,
     required this.categoria,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'titulo': titulo,
-      'monto': monto,
-      'ingreso': ingreso,
-      'fecha': fecha.toIso8601String(),
-      'categoria': categoria,
-    };
-  }
-
-  factory Movimiento.fromMap(Map<dynamic, dynamic> map) {
-    return Movimiento(
-      id: map['id'],
-      titulo: map['titulo'],
-      monto: map['monto'],
-      ingreso: map['ingreso'],
-      fecha: DateTime.parse(map['fecha']),
-      categoria: map['categoria'],
-    );
-  }
 }

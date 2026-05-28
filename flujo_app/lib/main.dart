@@ -10,6 +10,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
+
+  Hive.registerAdapter(MovimientoAdapter());
   
   await Hive.openBox<Movimiento>('movimientos_box');
   

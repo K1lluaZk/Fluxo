@@ -27,7 +27,9 @@ class MovimientoProvider extends ChangeNotifier {
 
     _movimientos = box.values
         .toList()
-        .cast<Movimiento>();
+        .cast<Movimiento>()
+        .reversed
+        .toList();
 
     notifyListeners();
   }
