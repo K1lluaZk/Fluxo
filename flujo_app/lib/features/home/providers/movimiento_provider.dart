@@ -51,6 +51,15 @@ class MovimientoProvider extends ChangeNotifier {
   }
 
   // =========================
+  // AGREGAR POR ID
+  // =========================
+  Movimiento obtenerPorId(String id) {
+  return _movimientos.firstWhere(
+    (m) => m.id == id,
+  );
+}
+
+  // =========================
   // ELIMINAR
   // =========================
   void eliminarMovimiento(int index) {
@@ -72,6 +81,36 @@ class MovimientoProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+// =========================
+// EDITAR
+// =========================
+void editarMovimiento(
+  int index,
+  Movimiento movimientoActualizado,
+) {
+  final movimientoViejo =
+      _movimientos[index];
+
+  _movimientos[index] =
+      movimientoActualizado;
+
+  final box =
+      Hive.box<Movimiento>(_boxName);
+
+  final key = box.keys.firstWhere(
+    (k) =>
+        box.get(k)?.id ==
+        movimientoViejo.id,
+  );
+
+  box.put(
+    key,
+    movimientoActualizado,
+  );
+
+  notifyListeners();
+}
 
   // =========================
   // TOTALES
