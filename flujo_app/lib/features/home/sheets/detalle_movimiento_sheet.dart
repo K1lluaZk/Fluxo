@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/movimiento.dart';
+import 'package:provider/provider.dart';
 
-void showDetalleMovimiento(BuildContext context, Movimiento item) {
+import '../../../../data/models/movimiento.dart';
+import '../providers/movimiento_provider.dart';
+import 'edit_movimiento_sheet.dart';
+
+void showDetalleMovimiento(
+  BuildContext context,
+  Movimiento item,
+) {
   showModalBottomSheet(
     context: context,
-    backgroundColor: const Color(0xFF0F172A), // Fondo oscuro coherente
+    backgroundColor: const Color(0xFF0F172A),
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(25),
+      ),
     ),
     builder: (context) => Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+     padding: const EdgeInsets.fromLTRB(30, 20, 30, 55),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Línea decorativa superior (Pestaña)
           Center(
             child: Container(
               width: 40,
@@ -25,13 +33,17 @@ void showDetalleMovimiento(BuildContext context, Movimiento item) {
               ),
             ),
           ),
+
           const SizedBox(height: 25),
 
-          // Etiqueta de Tipo (Ingreso/Gasto)
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
             decoration: BoxDecoration(
-              color: (item.ingreso ? Colors.greenAccent : Colors.redAccent).withOpacity(0.1),
+              color: (item.ingreso ? Colors.greenAccent : Colors.redAccent)
+                  .withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -44,10 +56,9 @@ void showDetalleMovimiento(BuildContext context, Movimiento item) {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 15),
 
-          // Título del movimiento
           Text(
             item.titulo,
             style: const TextStyle(
@@ -57,11 +68,15 @@ void showDetalleMovimiento(BuildContext context, Movimiento item) {
             ),
           ),
 
-          // Fecha formateada
           const SizedBox(height: 5),
+
           Row(
             children: [
-              const Icon(Icons.calendar_today, size: 14, color: Colors.blueGrey),
+              const Icon(
+                Icons.calendar_today,
+                size: 14,
+                color: Colors.blueGrey,
+              ),
               const SizedBox(width: 8),
               Text(
                 "${item.fecha.day}/${item.fecha.month}/${item.fecha.year}",
@@ -75,31 +90,40 @@ void showDetalleMovimiento(BuildContext context, Movimiento item) {
 
           const Divider(height: 50, color: Colors.white10),
 
-          // Fila de Monto
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 "Monto total",
-                style: TextStyle(fontSize: 18, color: Colors.white70),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white70,
+                ),
               ),
               Text(
                 "${item.ingreso ? '+' : '-'}\$${item.monto.toStringAsFixed(2)}",
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: item.ingreso ? const Color(0xFF4ADE80) : const Color(0xFFF87171),
+                  color: item.ingreso
+                      ? const Color(0xFF4ADE80)
+                      : const Color(0xFFF87171),
                 ),
               ),
             ],
           ),
+
+          const SizedBox(height: 10),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 "Categoría",
-                style: TextStyle(fontSize: 18, color: Colors.white70),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white70,
+                ),
               ),
               Text(
                 item.categoria,
@@ -112,7 +136,74 @@ void showDetalleMovimiento(BuildContext context, Movimiento item) {
             ],
           ),
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 8),
+
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1E40AF),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  icon: const Icon(Icons.edit),
+                  label: const Text(
+                    "Editar",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    final provider = context.read<MovimientoProvider>();
+
+                    Navigator.pop(context);
+
+                    showEditMovimientoSheet(
+                      context: context,
+                      movimiento: item,
+                      onSave: (movimientoActualizado) {
+                        provider.editarMovimientoPorId(item.id, movimientoActualizado);
+                      },
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(width: 10),
+
+              Expanded(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF87171),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  icon: const Icon(Icons.delete),
+                  label: const Text(
+                    "Eliminar",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    final provider = context.read<MovimientoProvider>();
+                    provider.eliminarMovimientoPorId(item.id);
+
+                    Navigator.pop(context);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Movimiento eliminado"),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     ),

@@ -3,8 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../data/models/movimiento.dart';
 
 class MovimientoProvider extends ChangeNotifier {
-  static const String _boxName =
-      'movimientos_box';
+  static const String _boxName = 'movimientos_box';
 
   List<Movimiento> _movimientos = [];
 
@@ -22,8 +21,7 @@ class MovimientoProvider extends ChangeNotifier {
   // CARGAR
   // =========================
   void _cargarMovimientosDeHive() {
-    final box =
-        Hive.box<Movimiento>(_boxName);
+    final box = Hive.box<Movimiento>(_boxName);
 
     _movimientos = box.values
         .toList()
@@ -42,8 +40,7 @@ class MovimientoProvider extends ChangeNotifier {
   ) {
     _movimientos.insert(0, movimiento);
 
-    final box =
-        Hive.box<Movimiento>(_boxName);
+    final box = Hive.box<Movimiento>(_boxName);
 
     box.add(movimiento);
 
@@ -51,13 +48,13 @@ class MovimientoProvider extends ChangeNotifier {
   }
 
   // =========================
-  // AGREGAR POR ID
+  // OBTENER POR ID
   // =========================
   Movimiento obtenerPorId(String id) {
-  return _movimientos.firstWhere(
-    (m) => m.id == id,
-  );
-}
+    return _movimientos.firstWhere(
+      (m) => m.id == id,
+    );
+  }
 
   // =========================
   // ELIMINAR
@@ -68,8 +65,7 @@ class MovimientoProvider extends ChangeNotifier {
 
     _movimientos.removeAt(index);
 
-    final box =
-        Hive.box<Movimiento>(_boxName);
+    final box = Hive.box<Movimiento>(_boxName);
 
     final key = box.keys.firstWhere(
       (k) =>
@@ -82,35 +78,85 @@ class MovimientoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-// =========================
-// EDITAR
-// =========================
-void editarMovimiento(
-  int index,
-  Movimiento movimientoActualizado,
-) {
-  final movimientoViejo =
-      _movimientos[index];
+  // =========================
+  // ELIMINAR POR ID
+  // =========================
+  void eliminarMovimientoPorId(
+    String id,
+  ) {
+    _movimientos.removeWhere(
+      (m) => m.id == id,
+    );
 
-  _movimientos[index] =
-      movimientoActualizado;
+    final box = Hive.box<Movimiento>(_boxName);
 
-  final box =
-      Hive.box<Movimiento>(_boxName);
+    final key = box.keys.firstWhere(
+      (k) => box.get(k)?.id == id,
+    );
 
-  final key = box.keys.firstWhere(
-    (k) =>
-        box.get(k)?.id ==
-        movimientoViejo.id,
-  );
+    box.delete(key);
 
-  box.put(
-    key,
-    movimientoActualizado,
-  );
+    notifyListeners();
+  }
 
-  notifyListeners();
-}
+  // =========================
+  // EDITAR POR ÍNDICE
+  // =========================
+  void editarMovimiento(
+    int index,
+    Movimiento movimientoActualizado,
+  ) {
+    final movimientoViejo =
+        _movimientos[index];
+
+    _movimientos[index] =
+        movimientoActualizado;
+
+    final box = Hive.box<Movimiento>(_boxName);
+
+    final key = box.keys.firstWhere(
+      (k) =>
+          box.get(k)?.id ==
+          movimientoViejo.id,
+    );
+
+    box.put(
+      key,
+      movimientoActualizado,
+    );
+
+    notifyListeners();
+  }
+
+  // =========================
+  // EDITAR POR ID
+  // =========================
+  void editarMovimientoPorId(
+    String id,
+    Movimiento movimientoActualizado,
+  ) {
+    final index = _movimientos.indexWhere(
+      (m) => m.id == id,
+    );
+
+    if (index == -1) return;
+
+    _movimientos[index] =
+        movimientoActualizado;
+
+    final box = Hive.box<Movimiento>(_boxName);
+
+    final key = box.keys.firstWhere(
+      (k) => box.get(k)?.id == id,
+    );
+
+    box.put(
+      key,
+      movimientoActualizado,
+    );
+
+    notifyListeners();
+  }
 
   // =========================
   // TOTALES

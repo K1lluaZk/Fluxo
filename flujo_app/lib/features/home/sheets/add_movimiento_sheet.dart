@@ -11,16 +11,18 @@ void showAddMovimientoSheet({
 
   // Lista de categorías disponibles
   final List<String> categorias = [
+    "Pendiente",
     "Comida",
     "Transporte",
     "Compras",
     "Trabajo",
     "Entretenimiento",
     "Salud",
+    "Otras",
   ];
 
   // Categoría seleccionada por defecto
-  String categoriaSeleccionada = "Comida";
+  String categoriaSeleccionada = "Pendiente";
 
   showModalBottomSheet(
     context: context,
