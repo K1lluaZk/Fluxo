@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../home/providers/movimiento_provider.dart';
+import '../providers/settings_provider.dart';
+
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -11,11 +13,14 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool notificaciones = false;
-  bool mostrarBalance = true;
   bool modoOscuro = true;
+
+
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<SettingsProvider>();
+    
     return Scaffold(
       backgroundColor: const Color(0xFF020617),
 
@@ -40,11 +45,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSwitchTile(
             title: "Mostrar balance",
             subtitle: "Oculta el dinero de la pantalla principal",
-            value: mostrarBalance,
+            value: settings.mostrarBalance,
             onChanged: (value) {
-              setState(() {
-                mostrarBalance = value;
-              });
+               context.read<SettingsProvider>().cambiarMostrarBalance(value);
             },
             icon: Icons.account_balance_wallet,
           ),

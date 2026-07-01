@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../settings/providers/settings_provider.dart';
 
 class BalanceHeader extends StatelessWidget {
-
   final double balance;
 
   const BalanceHeader({
@@ -11,11 +12,11 @@ class BalanceHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<SettingsProvider>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         const Text(
           "Balance Total",
           style: TextStyle(
@@ -27,7 +28,9 @@ class BalanceHeader extends StatelessWidget {
         const SizedBox(height: 8),
 
         Text(
-          "\$${balance.toStringAsFixed(2)}",
+          settings.mostrarBalance
+              ? "RD\$ ${balance.toStringAsFixed(2)}"
+              : "••••••••",
           style: const TextStyle(
             fontSize: 38,
             fontWeight: FontWeight.bold,

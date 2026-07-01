@@ -7,6 +7,7 @@ import 'features/home/screens/home_screen.dart';
 import 'core/theme/app_theme.dart';
 import 'features/home/providers/movimiento_provider.dart';
 import 'features/notes/providers/note_provider.dart';
+import 'features/settings/providers/settings_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ void main() async {
   
   await Hive.openBox<Movimiento>('movimientos_box');
   await Hive.openBox<Note>('notes_box');
+  await Hive.openBox("settings");
   
 
 runApp(
@@ -28,6 +30,9 @@ runApp(
       ),
       ChangeNotifierProvider(
         create: (_) => NoteProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => SettingsProvider(),
       ),
     ],
     child: const FluxoApp(),
