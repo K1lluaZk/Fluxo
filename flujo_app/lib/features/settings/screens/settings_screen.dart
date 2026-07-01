@@ -3,156 +3,77 @@ import 'package:provider/provider.dart';
 import '../../home/providers/movimiento_provider.dart';
 import '../providers/settings_provider.dart';
 
-
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
-
 class _SettingsScreenState extends State<SettingsScreen> {
   bool notificaciones = false;
-  bool modoOscuro = true;
-
-
 
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsProvider>();
-    
-    return Scaffold(
-      backgroundColor: const Color(0xFF020617),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text("Configuración"),
-        backgroundColor: const Color(0xFF0F172A),
+        backgroundColor: theme.appBarTheme.backgroundColor,
       ),
-
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text(
+          Text(
             "Preferencias",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
-
           const SizedBox(height: 25),
-
           _buildSwitchTile(
+            context,
             title: "Mostrar balance",
             subtitle: "Oculta el dinero de la pantalla principal",
             value: settings.mostrarBalance,
-            onChanged: (value) {
-               context.read<SettingsProvider>().cambiarMostrarBalance(value);
-            },
+            onChanged: (value) => context.read<SettingsProvider>().cambiarMostrarBalance(value),
             icon: Icons.account_balance_wallet,
           ),
-
           const SizedBox(height: 10),
-
           _buildSwitchTile(
+            context,
             title: "Modo oscuro",
             subtitle: "Tema oscuro elegante",
-            value: modoOscuro,
-            onChanged: (value) {
-              setState(() {
-                modoOscuro = value;
-              });
-            },
+            value: settings.modoOscuro,
+            onChanged: (value) => context.read<SettingsProvider>().cambiarModoOscuro(value),
             icon: Icons.dark_mode,
           ),
-
           const SizedBox(height: 10),
-
           _buildSwitchTile(
+            context,
             title: "Alertas",
             subtitle: "Activar futuras notificaciones",
             value: notificaciones,
-            onChanged: (value) {
-              setState(() {
-                notificaciones = value;
-              });
-            },
+            onChanged: (value) => setState(() => notificaciones = value),
             icon: Icons.notifications_active,
           ),
-
           const SizedBox(height: 35),
-
-          const Text(
+          Text(
             "Datos",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
-
           const SizedBox(height: 20),
-
           Container(
             decoration: BoxDecoration(
-              color: const Color(0xFF1E293B),
+              color: colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(18),
             ),
             child: ListTile(
-              leading: const Icon(
-                Icons.delete_forever,
-                color: Colors.redAccent,
-              ),
-              title: const Text(
-                "Borrar historial completo",
-                style: TextStyle(color: Colors.white),
-              ),
-              subtitle: const Text(
-                "Eliminar todos los movimientos",
-                style: TextStyle(color: Colors.blueGrey),
-              ),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    backgroundColor: const Color(0xFF0F172A),
-                    title: const Text(
-                      "Eliminar historial",
-                    ),
-                    content: const Text(
-                      "Esta acción eliminará todos los movimientos.",
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Cancelar"),
-                      ),
-
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 252, 17, 17),
-                        ),
-                        onPressed: () {
-                          context.read<MovimientoProvider>().borrarHistorial();
-
-                          
-                          Navigator.pop(context);
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "Historial eliminado",
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text("Eliminar"),
-                      ),
-                    ],
-                  ),
-                );
-              },
+              leading: Icon(Icons.delete_forever, color: colorScheme.error),
+              title: Text("Borrar historial completo", style: TextStyle(color: colorScheme.onSurface)),
+              subtitle: Text("Eliminar todos los movimientos", style: TextStyle(color: colorScheme.onSurfaceVariant)),
+              onTap: () => _confirmarBorrado(context),
             ),
           ),
         ],
@@ -160,35 +81,103 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildSwitchTile({
+void _confirmarBorrado(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Eliminar historial"),
+      content: const Text("Esta acción eliminará todos los movimientos."),
+      actions: [
+        TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).colorScheme.secondary,
+          ),
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Cancelar"),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+          onPressed: () {
+            context.read<MovimientoProvider>().borrarHistorial();
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Historial eliminado")),
+            );
+          },
+          child: const Text("Eliminar"),
+        ),
+      ],
+    ),
+  );
+}
+
+  Widget _buildSwitchTile(
+    BuildContext context, {
     required String title,
     required String subtitle,
     required bool value,
     required Function(bool) onChanged,
     required IconData icon,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
-        borderRadius: BorderRadius.circular(18),
+    final theme = Theme.of(context);
+
+return Container(
+  decoration: BoxDecoration(
+    color: theme.brightness == Brightness.dark
+        ? const Color(0xFF161B22)
+        : Colors.white,
+    borderRadius: BorderRadius.circular(18),
+    border: Border.all(
+      color: theme.brightness == Brightness.dark
+          ? Colors.white10
+          : Colors.grey.shade300,
+    ),
+    boxShadow: theme.brightness == Brightness.light
+        ? [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ]
+        : [],
+  ),
+  child: SwitchListTile(
+    value: value,
+    onChanged: onChanged,
+
+    activeColor: theme.colorScheme.secondary,
+
+    inactiveThumbColor: theme.brightness == Brightness.dark
+        ? Colors.grey.shade400
+        : Colors.grey.shade600,
+
+    inactiveTrackColor: theme.brightness == Brightness.dark
+        ? Colors.white10
+        : Colors.grey.shade300,
+
+    secondary: Icon(
+      icon,
+      color: theme.colorScheme.onSurface,
+    ),
+
+    title: Text(
+      title,
+      style: TextStyle(
+        color: theme.colorScheme.onSurface,
+        fontWeight: FontWeight.w600,
       ),
-      child: SwitchListTile(
-        value: value,
-        onChanged: onChanged,
-        activeColor: const Color(0xFF1E40AF),
-        secondary: Icon(
-          icon,
-          color: Colors.white,
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(color: Colors.white),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: const TextStyle(color: Colors.blueGrey),
-        ),
+    ),
+
+    subtitle: Text(
+      subtitle,
+      style: TextStyle(
+        color: theme.hintColor,
       ),
-    );
+    ),
+  ),
+);
   }
 }

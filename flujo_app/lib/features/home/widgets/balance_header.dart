@@ -13,14 +13,15 @@ class BalanceHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsProvider>();
+    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Balance Total",
           style: TextStyle(
-            color: Colors.blueGrey,
+            color: theme.colorScheme.onSurface.withOpacity(0.7),
             fontSize: 18,
           ),
         ),
@@ -31,9 +32,10 @@ class BalanceHeader extends StatelessWidget {
           settings.mostrarBalance
               ? "RD\$ ${balance.toStringAsFixed(2)}"
               : "••••••••",
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 38,
             fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface,
           ),
         ),
       ],

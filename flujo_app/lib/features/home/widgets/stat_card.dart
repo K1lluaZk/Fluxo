@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class StatCard extends StatelessWidget {
-
   final String label;
   final String value;
   final IconData icon;
@@ -17,36 +16,38 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(18),
-
         decoration: BoxDecoration(
-          color: const Color(0xFF1E293B),
+          color: theme.colorScheme.primary,
           borderRadius: BorderRadius.circular(20),
         ),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            Icon(icon, color: color),
+            Icon(
+              icon,
+              color: color,
+            ),
 
             const SizedBox(height: 10),
 
             Text(
               label,
-              style: const TextStyle(
-                color: Colors.blueGrey,
+              style: TextStyle(
+                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
               ),
             ),
 
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
           ],

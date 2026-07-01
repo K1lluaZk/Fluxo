@@ -4,10 +4,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 class SettingsProvider extends ChangeNotifier {
   static const _boxName = "settings";
   static const _balanceKey = "mostrarBalance";
+  static const _darkModeKey = "modoOscuro";
 
   bool _mostrarBalance = true;
 
   bool get mostrarBalance => _mostrarBalance;
+
+  bool _modoOscuro = false;
+  bool get modoOscuro => _modoOscuro;
 
   SettingsProvider() {
     _cargar();
@@ -18,6 +22,8 @@ class SettingsProvider extends ChangeNotifier {
 
     _mostrarBalance =
         box.get(_balanceKey, defaultValue: true);
+
+    _modoOscuro = box.get(_darkModeKey, defaultValue: false); 
 
     notifyListeners();
   }
@@ -32,4 +38,15 @@ class SettingsProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void cambiarModoOscuro(bool value) {
+  _modoOscuro = value;
+
+  Hive.box(_boxName).put(
+    _darkModeKey,
+    value,
+  );
+
+  notifyListeners();
+}
 }

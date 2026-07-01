@@ -10,15 +10,15 @@ import '../providers/movimiento_provider.dart';
 import '../widgets/charts/balance_chart.dart';
 import '../widgets/app_drawer.dart';
 
-// --- VISTA (HOME SCREEN) ---
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Escuchamos el provider centralizado
     final movimientoProvider = context.watch<MovimientoProvider>();
     final movimientos = movimientoProvider.movimientos;
+
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -27,13 +27,13 @@ class HomeScreen extends StatelessWidget {
         title: const Text("Fluxo"),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E40AF),
         onPressed: () {
           showAddMovimientoSheet(
             context: context,
             onSave: (movimiento) {
-              // Centralizado: Agrega y guarda en Hive en un solo paso
-              context.read<MovimientoProvider>().agregarMovimiento(movimiento);
+              context
+                  .read<MovimientoProvider>()
+                  .agregarMovimiento(movimiento);
             },
           );
         },
@@ -65,28 +65,34 @@ class HomeScreen extends StatelessWidget {
               children: [
                 StatCard(
                   label: "Ingresos",
-                  value: "\$${movimientoProvider.totalIngresos.toStringAsFixed(0)}",
-                  icon: Icons.arrow_downward,
-                  color: const Color(0xFF4ADE80),
+                  value:
+                      "\$${movimientoProvider.totalIngresos.toStringAsFixed(0)}",
+                  icon: Icons.arrow_upward,
+                  color: colorScheme.secondary,
                 ),
+
                 const SizedBox(width: 15),
+
                 StatCard(
                   label: "Gastos",
-                  value: "\$${movimientoProvider.totalGastos.toStringAsFixed(0)}",
-                  icon: Icons.arrow_upward,
-                  color: const Color(0xFFF87171),
+                  value:
+                      "\$${movimientoProvider.totalGastos.toStringAsFixed(0)}",
+                  icon: Icons.arrow_downward,
+                  color: colorScheme.error,
                 ),
               ],
             ),
 
             const SizedBox(height: 35),
 
-            const Text(
+            Text(
               "Movimientos recientes",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
 
             const SizedBox(height: 20),
@@ -100,7 +106,8 @@ class HomeScreen extends StatelessWidget {
                   )
                 : ListView.builder(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics:
+                        const NeverScrollableScrollPhysics(),
                     itemCount: movimientos.length,
                     itemBuilder: (context, index) {
                       final item = movimientos[index];
@@ -114,13 +121,15 @@ class HomeScreen extends StatelessWidget {
                         },
                         child: Dismissible(
                           key: Key(item.id),
-                          direction: DismissDirection.endToStart,
+                          direction:
+                              DismissDirection.endToStart,
                           onDismissed: (_) {
                             context
                                 .read<MovimientoProvider>()
                                 .eliminarMovimiento(index);
                           },
-                          background: const DeleteBackground(),
+                          background:
+                              const DeleteBackground(),
                           child: MovimientoTile(
                             item: item,
                           ),

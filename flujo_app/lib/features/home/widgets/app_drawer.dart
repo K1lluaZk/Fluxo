@@ -8,29 +8,31 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Drawer(
-      backgroundColor: const Color(0xFF0F172A),
+      backgroundColor: theme.scaffoldBackgroundColor,
       child: Column(
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Color(0xFF1E293B),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
+                Icon(
                   Icons.monetization_on,
-                  color: Colors.white,
+                  color: theme.colorScheme.onSurface,
                   size: 45,
                 ),
 
                 const SizedBox(height: 15),
 
-                const Text(
+                Text(
                   "Fluxo",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: theme.colorScheme.onSurface,
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
@@ -41,7 +43,7 @@ class AppDrawer extends StatelessWidget {
                 Text(
                   "Controla tu dinero con cabeza.",
                   style: TextStyle(
-                    color: Colors.blueGrey.shade300,
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
               ],
@@ -76,7 +78,7 @@ class AppDrawer extends StatelessWidget {
             child: Text(
               "Fluxo v1.0",
               style: TextStyle(
-                color: Colors.blueGrey.shade500,
+                color: theme.colorScheme.onSurface.withOpacity(0.5),
               ),
             ),
           ),
@@ -91,15 +93,17 @@ class AppDrawer extends StatelessWidget {
     required String title,
     required Widget screen,
   }) {
+    final theme = Theme.of(context);
+
     return ListTile(
       leading: Icon(
         icon,
-        color: Colors.white,
+        color: theme.colorScheme.onSurface,
       ),
       title: Text(
         title,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: theme.colorScheme.onSurface,
         ),
       ),
       onTap: () {

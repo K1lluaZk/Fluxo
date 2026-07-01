@@ -5,6 +5,8 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Acerca de Fluxo"),
@@ -14,10 +16,9 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Fluxo",
-              style: TextStyle(
-                fontSize: 32,
+              style: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -26,25 +27,22 @@ class AboutScreen extends StatelessWidget {
 
             Text(
               "Aplicación personal de control financiero creada en Flutter.",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.blueGrey.shade300,
-              ),
+              style: theme.textTheme.bodyLarge,
             ),
 
             const SizedBox(height: 30),
 
             Text(
               "Versión 1.0",
-              style: TextStyle(
-                color: Colors.blueGrey.shade500,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.hintColor,
               ),
             ),
 
             Text(
               "Creada por Mario Suero.",
-              style: TextStyle(
-                color: Colors.blueGrey.shade500,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.hintColor,
               ),
             ),
           ],

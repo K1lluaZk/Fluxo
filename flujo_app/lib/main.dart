@@ -46,10 +46,19 @@ class FluxoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<SettingsProvider>();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fluxo',
-      theme: AppTheme.darkTheme,
+
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+
+      themeMode: settings.modoOscuro
+          ? ThemeMode.dark
+          : ThemeMode.light,
+
       home: const HomeScreen(),
     );
   }

@@ -9,8 +9,7 @@ void showEditMovimientoSheet({
   final tituloController =
       TextEditingController(text: movimiento.titulo);
 
-  final montoController =
-      TextEditingController(
+  final montoController = TextEditingController(
     text: movimiento.monto.toString(),
   );
 
@@ -24,15 +23,15 @@ void showEditMovimientoSheet({
     "Trabajo",
     "Entretenimiento",
     "Salud",
+    "Otras",
   ];
 
-  String categoriaSeleccionada =
-      movimiento.categoria;
+  String categoriaSeleccionada = movimiento.categoria;
 
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor: const Color(0xFF0F172A),
+    backgroundColor: Theme.of(context).colorScheme.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(25),
@@ -40,17 +39,19 @@ void showEditMovimientoSheet({
     ),
     builder: (context) => StatefulBuilder(
       builder: (context, setModalState) {
+        final theme = Theme.of(context);
+
+        final fieldColor = theme.brightness == Brightness.dark
+            ? const Color(0xFF1A1F29)
+            : const Color(0xFFF0F4F3);
+
         return SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
               left: 25,
               right: 25,
               top: 25,
-              bottom:
-                  MediaQuery.of(context)
-                          .viewInsets
-                          .bottom +
-                      60,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 60,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -59,20 +60,17 @@ void showEditMovimientoSheet({
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius:
-                        BorderRadius.circular(10),
+                    color: theme.dividerColor,
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-                const Text(
+                Text(
                   "Editar Movimiento",
-                  style: TextStyle(
-                    fontSize: 20,
+                  style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
 
@@ -81,6 +79,7 @@ void showEditMovimientoSheet({
                 Row(
                   children: [
                     _buildTipoBtn(
+                      context: context,
                       label: "INGRESO",
                       isSelected: esIngreso,
                       onTap: () {
@@ -89,10 +88,9 @@ void showEditMovimientoSheet({
                         });
                       },
                     ),
-
                     const SizedBox(width: 10),
-
                     _buildTipoBtn(
+                      context: context,
                       label: "GASTO",
                       isSelected: !esIngreso,
                       onTap: () {
@@ -104,24 +102,16 @@ void showEditMovimientoSheet({
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 25),
 
                 TextField(
                   controller: tituloController,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
                   decoration: InputDecoration(
                     labelText: "Descripción",
-                    labelStyle: const TextStyle(
-                      color: Colors.blueGrey,
-                    ),
                     filled: true,
-                    fillColor:
-                        Colors.white.withOpacity(0.05),
+                    fillColor: fieldColor,
                     border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -132,24 +122,13 @@ void showEditMovimientoSheet({
                 TextField(
                   controller: montoController,
                   keyboardType:
-                      const TextInputType
-                          .numberWithOptions(
-                    decimal: true,
-                  ),
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                      const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     labelText: "Monto",
-                    labelStyle: const TextStyle(
-                      color: Colors.blueGrey,
-                    ),
                     filled: true,
-                    fillColor:
-                        Colors.white.withOpacity(0.05),
+                    fillColor: fieldColor,
                     border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -159,22 +138,13 @@ void showEditMovimientoSheet({
 
                 DropdownButtonFormField<String>(
                   value: categoriaSeleccionada,
-                  dropdownColor:
-                      const Color(0xFF1E293B),
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                  dropdownColor: theme.colorScheme.surface,
                   decoration: InputDecoration(
                     labelText: "Categoría",
-                    labelStyle: const TextStyle(
-                      color: Colors.blueGrey,
-                    ),
                     filled: true,
-                    fillColor:
-                        Colors.white.withOpacity(0.05),
+                    fillColor: fieldColor,
                     border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -199,34 +169,19 @@ void showEditMovimientoSheet({
                   width: double.infinity,
                   height: 55,
                   child: ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color(
-                        0xFF1E40AF,
-                      ),
-                      foregroundColor:
-                          Colors.white,
-                      shape:
-                          RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(
-                          15,
-                        ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.secondary,
+                      foregroundColor: theme.colorScheme.onSecondary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                     onPressed: () {
-                      final titulo =
-                          tituloController.text.trim();
-
+                      final titulo = tituloController.text.trim();
                       final monto =
-                          double.tryParse(
-                                montoController.text,
-                              ) ??
-                              0;
+                          double.tryParse(montoController.text) ?? 0;
 
-                      if (titulo.isEmpty ||
-                          monto <= 0) {
+                      if (titulo.isEmpty || monto <= 0) {
                         return;
                       }
 
@@ -237,8 +192,7 @@ void showEditMovimientoSheet({
                           monto: monto,
                           ingreso: esIngreso,
                           fecha: movimiento.fecha,
-                          categoria:
-                              categoriaSeleccionada,
+                          categoria: categoriaSeleccionada,
                         ),
                       );
 
@@ -248,8 +202,7 @@ void showEditMovimientoSheet({
                       "Guardar Cambios",
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight:
-                            FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -264,23 +217,32 @@ void showEditMovimientoSheet({
 }
 
 Widget _buildTipoBtn({
+  required BuildContext context,
   required String label,
   required bool isSelected,
   required VoidCallback onTap,
 }) {
+  final theme = Theme.of(context);
+
+  final backgroundColor = theme.brightness == Brightness.dark
+      ? const Color(0xFF1A1F29)
+      : const Color(0xFFF0F4F3);
+
   return Expanded(
     child: GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 14,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF1E40AF)
-              : Colors.white.withOpacity(0.05),
-          borderRadius:
-              BorderRadius.circular(12),
+              ? theme.colorScheme.secondary
+              : backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected
+                ? Colors.transparent
+                : theme.dividerColor,
+          ),
         ),
         child: Center(
           child: Text(
@@ -288,8 +250,8 @@ Widget _buildTipoBtn({
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: isSelected
-                  ? Colors.white
-                  : Colors.blueGrey,
+                  ? theme.colorScheme.onSecondary
+                  : theme.textTheme.bodyLarge?.color,
             ),
           ),
         ),

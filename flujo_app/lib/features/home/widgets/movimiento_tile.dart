@@ -20,63 +20,72 @@ class MovimientoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
+        color: colors.primary,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: (item.ingreso
-                    ? const Color(0xFF4ADE80)
-                    : const Color(0xFFF87171))
-                .withOpacity(0.12),
+            backgroundColor: item.ingreso
+                ? colors.tertiary.withOpacity(0.12)
+                : colors.error.withOpacity(0.12),
             child: Icon(
-              categoriasIconos[item.categoria] ?? Icons.attach_money,
+              categoriasIconos[item.categoria] ??
+                  Icons.attach_money,
               color: item.ingreso
-                  ? const Color(0xFF4ADE80)
-                  : const Color(0xFFF87171),
+                  ? colors.tertiary
+                  : colors.error,
               size: 22,
             ),
           ),
+
           const SizedBox(width: 15),
+
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   item.titulo,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
+                    color: colors.onPrimary,
                   ),
                 ),
+
                 Text(
                   item.categoria,
-                  style: const TextStyle(
-                    color: Colors.blueGrey,
+                  style: TextStyle(
+                    color: colors.onPrimary.withOpacity(0.65),
                     fontSize: 12,
                   ),
                 ),
-                const Text(
+
+                Text(
                   "Toca para detalles",
                   style: TextStyle(
-                    color: Colors.blueGrey,
+                    color: colors.onPrimary.withOpacity(0.65),
                     fontSize: 12,
                   ),
                 ),
               ],
             ),
           ),
+
           Text(
             "${item.ingreso ? '+' : '-'}\$${item.monto.toStringAsFixed(2)}",
             style: TextStyle(
               color: item.ingreso
-                  ? const Color(0xFF4ADE80)
-                  : const Color(0xFFF87171),
+                  ? colors.tertiary
+                  : colors.error,
               fontWeight: FontWeight.bold,
             ),
           ),

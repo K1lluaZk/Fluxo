@@ -13,22 +13,24 @@ class BalanceChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Container(
-      height: 260, // 1. Aumentamos la altura de la tarjeta para albergar el gráfico más grande
+      height: 260,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
+        color: colors.primary,
         borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Flexible(
+          Flexible(
             child: Text(
               "Resumen\nfinanciero",
               style: TextStyle(
-                color: Colors.white,
+                color: colors.onPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -37,34 +39,33 @@ class BalanceChart extends StatelessWidget {
 
           const SizedBox(width: 15),
 
-          // 2. Aumentamos el tamaño de la caja de 140x140 a 200x200
           SizedBox(
             width: 200,
             height: 200,
             child: PieChart(
               PieChartData(
                 startDegreeOffset: 270,
-                centerSpaceRadius: 40, // 3. Espacio del centro (un poco más grande para dar balance)
+                centerSpaceRadius: 40,
                 sectionsSpace: 4,
                 sections: [
                   PieChartSectionData(
                     value: ingresos,
                     title: "Ingresos",
-                    radius: 55, // 4. Aumentamos el grosor de la rebanada (antes era 35)
-                    color: const Color(0xFF4ADE80),
-                    titleStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13, // 5. Letra un poco más grande y legible
+                    radius: 55,
+                    color: colors.secondary,
+                    titleStyle: TextStyle(
+                      color: colors.onSecondary,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   PieChartSectionData(
                     value: gastos,
                     title: "Gastos",
-                    radius: 55, // 4. Mismo grosor aquí
-                    color: const Color(0xFFF87171),
-                    titleStyle: const TextStyle(
-                      color: Colors.white,
+                    radius: 55,
+                    color: colors.error,
+                    titleStyle: TextStyle(
+                      color: colors.onError,
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),

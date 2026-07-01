@@ -7,9 +7,15 @@ void showAddMovimientoSheet({
 }) {
   final tituloController = TextEditingController();
   final montoController = TextEditingController();
+
   bool esIngreso = true;
 
-  // Lista de categorías disponibles
+  final theme = Theme.of(context);
+
+  final Color fieldColor = theme.brightness == Brightness.dark
+      ? const Color(0xFF1A1F29)
+      : const Color(0xFFF0F4F3);
+
   final List<String> categorias = [
     "Pendiente",
     "Comida",
@@ -21,169 +27,215 @@ void showAddMovimientoSheet({
     "Otras",
   ];
 
-  // Categoría seleccionada por defecto
   String categoriaSeleccionada = "Pendiente";
 
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor: const Color(0xFF0F172A), // Fondo oscuro
+    backgroundColor: theme.colorScheme.surface,
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(25),
+      ),
     ),
     builder: (context) => StatefulBuilder(
       builder: (context, setModalState) {
+        final theme = Theme.of(context);
+
         return SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
               left: 25,
               right: 25,
               top: 25,
-              // Ajuste para que suba más y no choque con el teclado
               bottom: MediaQuery.of(context).viewInsets.bottom + 60,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Línea decorativa superior
                 Container(
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.white24,
+                    color: theme.dividerColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+
                 const SizedBox(height: 20),
-                const Text(
+
+                Text(
                   "Nuevo Movimiento",
-                  style: TextStyle(
-                    fontSize: 20,
+                  style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
+
                 const SizedBox(height: 25),
 
-                // Selector de Tipo (Botones Ingreso/Gasto)
                 Row(
                   children: [
                     _buildTipoBtn(
+                      context: context,
                       label: "INGRESO",
                       isSelected: esIngreso,
                       onTap: () => setModalState(() => esIngreso = true),
                     ),
                     const SizedBox(width: 10),
                     _buildTipoBtn(
+                      context: context,
                       label: "GASTO",
                       isSelected: !esIngreso,
                       onTap: () => setModalState(() => esIngreso = false),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 25),
 
-                // Campo Descripción
                 TextField(
                   controller: tituloController,
-                  style: const TextStyle(color: Colors.white),
+                  cursorColor: theme.colorScheme.secondary,
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurface,
+                  ),
                   decoration: InputDecoration(
                     labelText: "Descripción",
-                    labelStyle: const TextStyle(color: Colors.blueGrey),
+                    labelStyle: TextStyle(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     filled: true,
-                    fillColor: Colors.white.withOpacity(0.05),
+                    fillColor: fieldColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: theme.colorScheme.secondary,
+                        width: 2,
+                      ),
+                    ),
                   ),
                 ),
+
                 const SizedBox(height: 15),
 
-                // Campo Monto
                 TextField(
                   controller: montoController,
-                  style: const TextStyle(color: Colors.white),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  cursorColor: theme.colorScheme.secondary,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurface,
+                  ),
                   decoration: InputDecoration(
                     labelText: "Monto",
-                    labelStyle: const TextStyle(color: Colors.blueGrey),
+                    labelStyle: TextStyle(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     filled: true,
-                    fillColor: Colors.white.withOpacity(0.05),
+                    fillColor: fieldColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: theme.colorScheme.secondary,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 15),
 
-                // Selector de Categoría (Dropdown)
                 DropdownButtonFormField<String>(
                   value: categoriaSeleccionada,
-                  dropdownColor: const Color(0xFF1E293B), // Fondo del menú desplegable
-                  style: const TextStyle(color: Colors.white),
-                  icon: const Icon(Icons.arrow_drop_down, color: Colors.blueGrey),
+                  dropdownColor: theme.colorScheme.surface,
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurface,
+                  ),
                   decoration: InputDecoration(
                     labelText: "Categoría",
-                    labelStyle: const TextStyle(color: Colors.blueGrey),
+                    labelStyle: TextStyle(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     filled: true,
-                    fillColor: Colors.white.withOpacity(0.05),
+                    fillColor: fieldColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: theme.colorScheme.secondary,
+                        width: 2,
+                      ),
+                    ),
                   ),
-                  items: categorias.map((String cat) {
-                    return DropdownMenuItem<String>(
+                  items: categorias.map((cat) {
+                    return DropdownMenuItem(
                       value: cat,
                       child: Text(cat),
                     );
                   }).toList(),
-                  onChanged: (nuevoValor) {
-                    if (nuevoValor != null) {
+                  onChanged: (valor) {
+                    if (valor != null) {
                       setModalState(() {
-                        categoriaSeleccionada = nuevoValor;
+                        categoriaSeleccionada = valor;
                       });
                     }
                   },
                 ),
+
                 const SizedBox(height: 30),
 
-                // Botón Guardar (Azul Marino Vibrante)
                 SizedBox(
                   width: double.infinity,
                   height: 55,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E40AF),
-                      foregroundColor: Colors.white,
+                      backgroundColor: theme.colorScheme.secondary,
+                      foregroundColor: theme.colorScheme.onSecondary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      elevation: 5,
                     ),
                     onPressed: () {
-                      final titulo = tituloController.text;
-                      final monto = double.tryParse(montoController.text) ?? 0;
+                      final titulo = tituloController.text.trim();
+                      final monto =
+                          double.tryParse(montoController.text) ?? 0;
 
                       if (titulo.isEmpty || monto <= 0) return;
 
-                      final movimiento = Movimiento(
-                        id: DateTime.now().toString(),
-                        titulo: titulo,
-                        monto: monto,
-                        ingreso: esIngreso,
-                        fecha: DateTime.now(),
-                        categoria: categoriaSeleccionada, // Asignación limpia del String seleccionado
+                      onSave(
+                        Movimiento(
+                          id: DateTime.now().toString(),
+                          titulo: titulo,
+                          monto: monto,
+                          ingreso: esIngreso,
+                          fecha: DateTime.now(),
+                          categoria: categoriaSeleccionada,
+                        ),
                       );
 
-                      onSave(movimiento);
                       Navigator.pop(context);
                     },
                     child: const Text(
                       "Guardar Movimiento",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -196,22 +248,33 @@ void showAddMovimientoSheet({
   );
 }
 
-// Widget auxiliar para los botones de tipo (Ingreso/Gasto)
 Widget _buildTipoBtn({
+  required BuildContext context,
   required String label,
   required bool isSelected,
   required VoidCallback onTap,
 }) {
+  final theme = Theme.of(context);
+
+  final Color background = theme.brightness == Brightness.dark
+      ? const Color(0xFF1A1F29)
+      : const Color(0xFFF0F4F3);
+
   return Expanded(
     child: GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1E40AF) : Colors.white.withOpacity(0.05),
+          color: isSelected
+              ? theme.colorScheme.secondary
+              : background,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? Colors.transparent : Colors.white10,
+            color: isSelected
+                ? theme.colorScheme.secondary
+                : theme.dividerColor,
           ),
         ),
         child: Center(
@@ -219,7 +282,9 @@ Widget _buildTipoBtn({
             label,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: isSelected ? Colors.white : Colors.blueGrey,
+              color: isSelected
+                  ? theme.colorScheme.onSecondary
+                  : theme.colorScheme.onSurface,
             ),
           ),
         ),
