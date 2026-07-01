@@ -5,14 +5,14 @@ class AppTheme {
     useMaterial3: true,
   ).copyWith(
     colorScheme: const ColorScheme.dark(
-      primary: Color(0xFF7C3AED),
+      primary: Color.fromARGB(255, 255, 255, 255),
       surface: Color(0xFF0F172A),
     ),
     scaffoldBackgroundColor: const Color(0xFF020617),
 
     floatingActionButtonTheme:
         const FloatingActionButtonThemeData(
-      backgroundColor: Color(0xFF7C3AED),
+      backgroundColor: Color.fromARGB(255, 255, 254, 255),
       foregroundColor: Colors.white,
     ),
   );

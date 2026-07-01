@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../home/providers/movimiento_provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -126,9 +128,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: const Color.fromARGB(255, 252, 17, 17),
                         ),
                         onPressed: () {
+                          context.read<MovimientoProvider>().borrarHistorial();
+
+                          
                           Navigator.pop(context);
 
                           ScaffoldMessenger.of(context).showSnackBar(

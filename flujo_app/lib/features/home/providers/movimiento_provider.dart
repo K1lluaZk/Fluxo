@@ -159,6 +159,18 @@ class MovimientoProvider extends ChangeNotifier {
   }
 
   // =========================
+  // BORRAR HISTORIAL
+  // =========================
+  void borrarHistorial() {
+    _movimientos.clear();
+
+    final box = Hive.box<Movimiento>(_boxName);
+    box.clear();
+
+    notifyListeners();
+  }
+
+  // =========================
   // TOTALES
   // =========================
   double get totalIngresos =>
@@ -180,3 +192,4 @@ class MovimientoProvider extends ChangeNotifier {
   double get balance =>
       totalIngresos - totalGastos;
 }
+
