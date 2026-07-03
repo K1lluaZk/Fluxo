@@ -105,32 +105,6 @@ flutter run
 
 ---
 
-# 📂 Estructura del Proyecto
-
-```text
-lib/
-│
-├── core/
-│
-├── data/
-│   ├── models/
-│   ├── repositories/
-│   └── services/
-│
-├── features/
-│   ├── home/
-│   ├── notes/
-│   ├── settings/
-│   └── splash/
-│
-├── widgets/
-│
-├── theme/
-│
-└── main.dart
-```
-
----
 
 # 🔔 Sistema de Recordatorios
 
@@ -156,24 +130,6 @@ Toda la información registrada por el usuario se almacena localmente mediante *
 <img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/bdd3e949-105f-4188-b790-c9266e11dd07" />
 <img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/4930ccfe-c1d4-4554-b689-e14f411df9b1" />
 <img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/00482bf5-5ac8-4233-b0dd-01a643a48df6" />
-
-
-
-> Reemplaza estas imágenes por capturas reales de la aplicación.
-
----
-
-# 🚀 Mejoras Futuras
-
-- 📊 Estadísticas financieras.
-- 📈 Gráficos de ingresos y gastos.
-- 🏦 Presupuestos mensuales.
-- 📂 Categorías personalizadas.
-- 🔍 Buscador de movimientos.
-- ☁️ Sincronización en la nube.
-- 📤 Exportación de datos a PDF y Excel.
-- 🔐 Autenticación biométrica.
-- 🌍 Soporte para múltiples idiomas.
 
 ---
 
