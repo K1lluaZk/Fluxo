@@ -49,15 +49,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onChanged: (value) => context.read<SettingsProvider>().cambiarModoOscuro(value),
             icon: Icons.dark_mode,
           ),
-          const SizedBox(height: 10),
-          _buildSwitchTile(
-            context,
-            title: "Alertas",
-            subtitle: "Activar futuras notificaciones",
-            value: notificaciones,
-            onChanged: (value) => setState(() => notificaciones = value),
-            icon: Icons.notifications_active,
-          ),
           const SizedBox(height: 35),
           Text(
             "Datos",

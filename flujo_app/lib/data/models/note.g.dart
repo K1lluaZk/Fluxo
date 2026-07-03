@@ -24,13 +24,16 @@ class NoteAdapter extends TypeAdapter<Note> {
       monto: fields[4] as double,
       ingreso: fields[5] as bool,
       completada: fields[6] as bool,
+      fechaVencimiento: fields[7] as DateTime?,
+      recordar: fields[8] as bool,
+      diasAntes: fields[9] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Note obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +47,13 @@ class NoteAdapter extends TypeAdapter<Note> {
       ..writeByte(5)
       ..write(obj.ingreso)
       ..writeByte(6)
-      ..write(obj.completada);
+      ..write(obj.completada)
+      ..writeByte(7)
+      ..write(obj.fechaVencimiento)
+      ..writeByte(8)
+      ..write(obj.recordar)
+      ..writeByte(9)
+      ..write(obj.diasAntes);
   }
 
   @override

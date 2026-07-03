@@ -1,44 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'data/models/movimiento.dart'; 
+import 'data/models/movimiento.dart';
 import 'data/models/note.dart';
 import 'features/home/screens/home_screen.dart';
 import 'core/theme/app_theme.dart';
 import 'features/home/providers/movimiento_provider.dart';
 import 'features/notes/providers/note_provider.dart';
 import 'features/settings/providers/settings_provider.dart';
+import 'data/services/notification_service.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Hive
   await Hive.initFlutter();
 
   Hive.registerAdapter(MovimientoAdapter());
   Hive.registerAdapter(NoteAdapter());
-  
+
   await Hive.openBox<Movimiento>('movimientos_box');
   await Hive.openBox<Note>('notes_box');
-  await Hive.openBox("settings");
-  
+  await Hive.openBox('settings');
 
-runApp(
-  MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-        create: (_) => MovimientoProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => NoteProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => SettingsProvider(),
-      ),
-    ],
-    child: const FluxoApp(),
-  ),
-);
+  // Notificaciones
+  await NotificationService.instance.init();
+  await NotificationService.instance.requestPermission();
 
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => MovimientoProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NoteProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SettingsProvider(),
+        ),
+      ],
+      child: const FluxoApp(),
+    ),
+  );
 }
 
 class FluxoApp extends StatelessWidget {
