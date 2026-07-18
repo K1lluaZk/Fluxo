@@ -33,7 +33,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 30),
 
             Text(
-              "Versión 1.0",
+              "Versión 1.1",
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.hintColor,
               ),

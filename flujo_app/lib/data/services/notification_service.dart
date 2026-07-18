@@ -23,7 +23,7 @@ class NotificationService {
     );
 
     const android = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+      'notification_icon',
     );
 
     const settings = InitializationSettings(
